@@ -1,14 +1,17 @@
-# Use Java 21 runtime
-FROM eclipse-temurin:21-jdk
+FROM maven:3.9.8-eclipse-temurin-21 AS build
 
-# Set working directory
 WORKDIR /app
 
-# Copy the JAR file
-COPY target/*.jar app.jar
+COPY . .
 
-# Expose application port
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:21-jre
+
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
+
 EXPOSE 8081
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]
