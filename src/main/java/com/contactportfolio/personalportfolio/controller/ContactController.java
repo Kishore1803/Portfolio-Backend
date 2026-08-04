@@ -17,7 +17,6 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/contact")
-@CrossOrigin(origins = "*")
 @Validated
 public class ContactController {
 
