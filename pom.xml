@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -15,6 +16,7 @@
     <groupId>com.contactportfolio</groupId>
     <artifactId>personalportfolio</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+
     <name>portfolio-backend</name>
     <description>Portfolio Contact Backend</description>
 
@@ -76,12 +78,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-        	<groupId>com.techin60academy</groupId>
-        	<artifactId>Techin60Academy</artifactId>
-        	<version>1.0</version>
-        </dependency>
+     
     </dependencies>
 
     <build>
