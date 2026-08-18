@@ -1,34 +1,36 @@
 package com.contactportfolio.personalportfolio.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.contactportfolio.personalportfolio.dto.ContactRequest;
-import com.contactportfolio.personalportfolio.dto.ContactResponse;
+import com.contactportfolio.personalportfolio.entity.Contact;
 import com.contactportfolio.personalportfolio.service.ContactService;
-
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/contact")
-@Validated
+@CrossOrigin(origins = "*")
 public class ContactController {
 
-    @Autowired
-    private ContactService contactService;
+    private final ContactService contactService;
+
+    public ContactController(ContactService contactService) {
+        this.contactService = contactService;
+    }
 
     @PostMapping
-    public ResponseEntity<ContactResponse> saveContact(
-            @Valid @RequestBody ContactRequest request) {
+    public ResponseEntity<?> submitContact(@RequestBody Contact contact) {
 
-        ContactResponse response = contactService.saveContact(request);
+        try {
 
-        return ResponseEntity.ok(response);
+            Contact savedContact = contactService.saveContact(contact);
+            return ResponseEntity.ok(savedContact);
+
+        } catch (Exception e) {
+
+            return ResponseEntity
+                    .internalServerError()
+                    .body("Failed to send contact message");
+
+        }
     }
 }

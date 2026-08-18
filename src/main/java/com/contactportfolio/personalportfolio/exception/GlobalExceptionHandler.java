@@ -15,9 +15,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ContactResponse> handleValidationException(
             MethodArgumentNotValidException ex) {
 
-        String errorMessage = ex.getBindingResult()
-                .getFieldError()
-                .getDefaultMessage();
+        String errorMessage = ex.getBindingResult().getFieldError().getDefaultMessage();
 
         ContactResponse response = new ContactResponse();
         response.setStatus("FAILED");

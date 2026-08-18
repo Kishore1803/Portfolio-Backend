@@ -25,8 +25,7 @@ public class Contact {
     public Contact() {
     }
 
-    public Contact(Long id, String name, String email, String subject, String message) {
-        this.id = id;
+    public Contact(String name, String email, String subject, String message) {
         this.name = name;
         this.email = email;
         this.subject = subject;
@@ -35,10 +34,6 @@ public class Contact {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
