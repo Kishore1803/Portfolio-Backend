@@ -8,7 +8,6 @@ import com.contactportfolio.personalportfolio.service.ContactService;
 
 @RestController
 @RequestMapping("/api/contact")
-@CrossOrigin(origins = "*")
 public class ContactController {
 
     private final ContactService contactService;
@@ -18,18 +17,10 @@ public class ContactController {
     }
 
     @PostMapping
-    public ResponseEntity<?> submitContact(@RequestBody Contact contact) {
+    public ResponseEntity<Contact> saveContact(@RequestBody Contact contact) {
 
-        try {
+        Contact savedContact = contactService.saveContact(contact);
 
-            Contact savedContact = contactService.saveContact(contact);
-            return ResponseEntity.ok(savedContact);
-
-        } catch (Exception e) {
-
-            return ResponseEntity.internalServerError()
-                    .body("Failed to send contact message");
-
-        }
+        return ResponseEntity.ok(savedContact);
     }
 }
