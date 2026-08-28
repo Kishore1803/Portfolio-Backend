@@ -78,6 +78,13 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        
+        <!--Resend-->
+        <dependency>
+             <groupId>com.resend</groupId>
+             <artifactId>resend-java</artifactId>
+             <version>4.19.0</version>
+        </dependency>
      
     </dependencies>
 

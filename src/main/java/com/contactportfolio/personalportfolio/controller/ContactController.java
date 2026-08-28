@@ -27,8 +27,7 @@ public class ContactController {
 
         } catch (Exception e) {
 
-            return ResponseEntity
-                    .internalServerError()
+            return ResponseEntity.internalServerError()
                     .body("Failed to send contact message");
 
         }

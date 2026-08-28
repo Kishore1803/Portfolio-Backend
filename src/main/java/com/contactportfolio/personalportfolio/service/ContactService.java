@@ -1,51 +1,55 @@
 package com.contactportfolio.personalportfolio.service;
 
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.contactportfolio.personalportfolio.entity.Contact;
 import com.contactportfolio.personalportfolio.repository.ContactRepository;
+import com.resend.Resend;
+import com.resend.services.emails.model.CreateEmailOptions;
 
 @Service
 public class ContactService {
 
     private final ContactRepository contactRepository;
-    private final JavaMailSender mailSender;
+    private final Resend resend;
 
-    public ContactService(
-            ContactRepository contactRepository,
-            JavaMailSender mailSender) {
+    public ContactService(ContactRepository contactRepository, @Value("${resend.api.key}") String resendApiKey) {
 
         this.contactRepository = contactRepository;
-        this.mailSender = mailSender;
+        this.resend = new Resend(resendApiKey);
     }
 
     public Contact saveContact(Contact contact) {
 
-        // Save contact to MySQL
+        // Save contact to TiDB/MySQL
         Contact savedContact = contactRepository.save(contact);
 
-        // Send email
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        try {
 
-        mailMessage.setTo("kannan.v4704@gmail.com");
+            // Send email using Resend
+            CreateEmailOptions email = CreateEmailOptions.builder()
+                    .from("onboarding@resend.dev")
+                    .to("kannan.v4704@gmail.com")
+                    .subject("Portfolio Contact: " + contact.getSubject())
+                    .html("<h2>New Portfolio Contact</h2>" +
+                          "<p><strong>Name:</strong> " + contact.getName() + "</p>" +
+                          "<p><strong>Email:</strong> " + contact.getEmail() + "</p>" +
+                          "<p><strong>Subject:</strong> " + contact.getSubject() + "</p>" +
+                          "<p><strong>Message:</strong></p>" +
+                          "<p>" + contact.getMessage() + "</p>")
+                   .build();
 
-        mailMessage.setSubject(
-                "Portfolio Contact: " + contact.getSubject()
-        );
+            resend.emails().send(email);
 
-        mailMessage.setText(
-                "You received a new message from your portfolio.\n\n" +
-                "Name: " + contact.getName() + "\n" +
-                "Email: " + contact.getEmail() + "\n" +
-                "Subject: " + contact.getSubject() + "\n\n" +
-                "Message:\n" +
-                contact.getMessage()
-        );
+            return savedContact;
 
-        mailSender.send(mailMessage);
+        } catch (Exception e) {
 
-        return savedContact;
+            // Email failed → remove database record
+            contactRepository.delete(savedContact);
+
+            throw new RuntimeException("Failed to send email", e);
+        }
     }
 }
