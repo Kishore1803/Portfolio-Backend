@@ -14,7 +14,9 @@ public class ContactService {
     private final ContactRepository contactRepository;
     private final Resend resend;
 
-    public ContactService(ContactRepository contactRepository, @Value("${resend.api.key}") String resendApiKey) {
+    public ContactService(
+            ContactRepository contactRepository,
+            @Value("${resend.api.key}") String resendApiKey) {
 
         this.contactRepository = contactRepository;
         this.resend = new Resend(resendApiKey);
@@ -22,12 +24,12 @@ public class ContactService {
 
     public Contact saveContact(Contact contact) {
 
-        // Save contact to TiDB/MySQL
+        // Save contact to TiDB Cloud
         Contact savedContact = contactRepository.save(contact);
 
         try {
 
-            // Send email using Resend
+            // Create email request
             CreateEmailOptions email = CreateEmailOptions.builder()
                     .from("onboarding@resend.dev")
                     .to("kannan.v4704@gmail.com")
@@ -37,19 +39,17 @@ public class ContactService {
                           "<p><strong>Email:</strong> " + contact.getEmail() + "</p>" +
                           "<p><strong>Subject:</strong> " + contact.getSubject() + "</p>" +
                           "<p><strong>Message:</strong></p>" +
-                          "<p>" + contact.getMessage() + "</p>")
-                   .build();
+                          "<p>" + contact.getMessage() + "</p>").build();
 
+            // Send email through Resend
             resend.emails().send(email);
-
+            System.out.println("Email sent successfully!");
             return savedContact;
 
         } catch (Exception e) {
 
-            // Email failed → remove database record
-            contactRepository.delete(savedContact);
-
-            throw new RuntimeException("Failed to send email", e);
+            e.printStackTrace();
+            throw new RuntimeException("Failed to send email: " + e.getMessage());
         }
     }
 }
