@@ -8,6 +8,7 @@ import com.contactportfolio.personalportfolio.service.ContactService;
 
 @RestController
 @RequestMapping("/api/contact")
+@CrossOrigin(origins = "*")
 public class ContactController {
 
     private final ContactService contactService;
@@ -18,9 +19,7 @@ public class ContactController {
 
     @PostMapping
     public ResponseEntity<Contact> saveContact(@RequestBody Contact contact) {
-
         Contact savedContact = contactService.saveContact(contact);
-
         return ResponseEntity.ok(savedContact);
     }
 }
