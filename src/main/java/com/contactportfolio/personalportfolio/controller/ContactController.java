@@ -16,6 +16,10 @@ public class ContactController {
     public ContactController(ContactService contactService) {
         this.contactService = contactService;
     }
+    
+    public String name() {
+    	return "Port is Running in 8081";
+    }
 
     @PostMapping
     public ResponseEntity<Contact> saveContact(@RequestBody Contact contact) {
