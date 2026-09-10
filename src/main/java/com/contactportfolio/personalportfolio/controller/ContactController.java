@@ -8,7 +8,7 @@ import com.contactportfolio.personalportfolio.service.ContactService;
 
 @RestController
 @RequestMapping("/api/contact")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:5173") // React Vite
 public class ContactController {
 
     private final ContactService contactService;
@@ -16,9 +16,10 @@ public class ContactController {
     public ContactController(ContactService contactService) {
         this.contactService = contactService;
     }
-    
+
+    @GetMapping
     public String name() {
-    	return "Port is Running in 8081";
+        return "Port is Running in 8081";
     }
 
     @PostMapping
