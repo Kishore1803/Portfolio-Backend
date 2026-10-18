@@ -8,7 +8,7 @@ import com.contactportfolio.personalportfolio.service.ContactService;
 
 @RestController
 @RequestMapping("/api/contact")
-@CrossOrigin(origins = "http://localhost:5173") // React Vite
+@CrossOrigin(origins = "*") // React Vite
 public class ContactController {
 
     private final ContactService contactService;
